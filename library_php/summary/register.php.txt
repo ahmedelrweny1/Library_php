@@ -1,0 +1,73 @@
+# register.php - Page Summary
+
+## Overview
+The register.php file implements the user registration functionality, handling new account creation and validation.
+
+## Key Dependencies
+- models/User.php: User model for creating new accounts
+- includes/Validator.php: Validation class for form input (not fully used in this file)
+
+## Session Management
+- Starts a session at the beginning of the script
+
+## Registration Flow
+1. Checks if form was submitted (POST request)
+2. Collects user information (username, email, password)
+3. Validates that:
+   - Email does not already exist in the database using User::emailExists()
+   - Password matches confirmation field
+4. If validation passes:
+   - Creates new user account using User::create()
+   - Redirects to login.php on success
+5. If validation fails:
+   - Displays specific error messages
+
+## Error Handling
+- Specific error variables for different types of errors:
+  - $usernameError: Username validation errors
+  - $emailError: Email validation/uniqueness errors
+  - $passwordError: Password validation/confirmation errors
+  - $generalError: General registration failures
+
+## Form Handling
+- Marks input fields with an "error" class when validation fails
+- Shows specific error messages below each affected input field
+
+## Frontend Integration
+- Includes HTML form with username, email, password and confirmation fields
+- Links to login page for existing users
+- Includes register.js script for client-side functionality
+- Uses CSS for styling (register.css)
+
+## Security Considerations
+- Checks for existing email addresses to prevent duplicates
+- Validates password confirmation
+- User::create() handles password hashing internally
+
+## Page Role and Connections
+This page serves as the account creation entry point in the library system with the following connections:
+
+### Input Connections
+- Accepts user input through the registration form
+- Uses User model to check for existing emails and create new accounts
+- Uses session management for potential error state persistence
+
+### Output Connections
+- On successful registration, redirects to login.php for authentication
+- Provides a link to login.php for existing users
+- Creates new user records in the database through the User model
+
+### Logic Flow
+1. User arrives at registration page (typically from index.php or login.php)
+2. User enters registration information (username, email, password, confirmation)
+3. System validates:
+   - Email uniqueness by checking against existing users in the database
+   - Password confirmation matching
+4. If validation passes:
+   - New user record is created in the database with hashed password
+   - User is redirected to login.php to authenticate with their new credentials
+5. If validation fails:
+   - Specific error messages are displayed
+   - User remains on registration page to correct information
+
+The register.php acts as the onboarding point for new users, creating the necessary database records that will later be used for authentication. It connects directly to the User model for database operations and forms a logical sequence with login.php, where users are directed after successful registration to establish their authenticated session. This completes the user creation-authentication flow that grants access to protected features throughout the application. 

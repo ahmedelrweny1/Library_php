@@ -1,0 +1,82 @@
+# get_book_details.php - API Summary
+
+## Overview
+The get_book_details.php file implements a REST API endpoint that returns detailed information about a specific book.
+
+## Key Dependencies
+- models/Book.php: Book model for database operations
+
+## HTTP Headers
+- Sets Access-Control-Allow-Origin: * (enables CORS for all domains)
+- Sets Content-Type: application/json (specifies JSON response format)
+
+## Request Parameter
+- id: Book ID to fetch (via GET parameter)
+- Parameter is validated and converted to integer
+
+## Processing Flow
+1. Validates that book_id is greater than 0
+2. Attempts to fetch book details using Book::getBookDetails()
+3. If book exists:
+   - Formats response with book data
+   - Sets HTTP 200 status code
+   - Returns JSON response
+4. If book doesn't exist:
+   - Sets HTTP 404 status code
+   - Returns error message "Book not found"
+5. If invalid ID provided:
+   - Sets HTTP 400 status code
+   - Returns error message "Invalid book ID"
+
+## Response Format
+Success response (HTTP 200):
+```json
+{
+  "id": 1,
+  "title": "Book Title",
+  "author": "Author Name",
+  "description": "Book description text...",
+  "isbn": "1234567890",
+  "published_year": "2023",
+  "image_url": "path/to/image.jpg"
+}
+```
+
+Error response (HTTP 404 or 400):
+```json
+{
+  "message": "Error message here"
+}
+```
+
+## Usage
+- Called by JavaScript to load book details in modal windows
+- Used for AJAX requests when detailed book information is needed
+
+## API Endpoint Role and Connections
+The get_book_details.php API endpoint serves as the bridge between client-side JavaScript and the book database, enabling dynamic content loading without page refreshes:
+
+### Input Connections
+- Receives book ID from client-side JavaScript via GET parameter
+- Uses Book model to fetch book details from the database
+
+### Output Connections
+- Returns JSON data to client-side JavaScript
+- Indirectly connects to the frontend modal display on index.php and books.php
+
+### Client-Server Interaction
+1. User clicks on a book thumbnail/title on index.php or books.php
+2. JavaScript event handler captures the click and extracts the book ID
+3. JavaScript makes an AJAX request to get_book_details.php with the book ID
+4. get_book_details.php validates the ID and queries the database
+5. get_book_details.php returns formatted JSON response
+6. JavaScript receives the response and populates the modal with book details
+7. Modal is displayed to the user with complete book information
+
+### Technical Integration
+- CORS headers allow the API to be called from different domains if needed
+- HTTP status codes provide semantic responses for different conditions
+- JSON format enables easy parsing and usage in JavaScript
+- Parameter validation prevents database errors and potential security issues
+
+This API endpoint is essential for the interactive user experience, allowing dynamic content loading without navigating away from the main pages. It represents the application's implementation of a modern, responsive web design pattern that separates data from presentation. The endpoint also serves as an example of proper REST API design with appropriate status codes, error handling, and data formatting. 

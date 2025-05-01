@@ -1,0 +1,65 @@
+# RentedBook.php - Model Summary
+
+## Overview
+The RentedBook.php file implements the RentedBook class, which manages book lending operations in the library system.
+
+## Database Connection
+- Connects to the MySQL database using the Database class from config/database.php
+- Uses PDO for secure database operations
+- Table name: "rented_books"
+
+## Properties
+- id: Rental transaction identifier
+- user_id: ID of the user who rented the book
+- book_id: ID of the book being rented
+- borrow_date: Timestamp when the book was borrowed
+- return_date: Timestamp when the book was returned (null if not returned yet)
+
+## Methods
+- __construct(): Initializes database connection
+- rentBook(): Records a new book rental in the system
+- returnBook($id): Updates a rental record when a book is returned
+- getUserRentedBooks($user_id): Retrieves all books rented by a specific user
+- isBookAvailable($book_id): Checks if a book is available for rental
+
+## Implementation Details
+- Uses JOIN operations to fetch both book and rental information in getUserRentedBooks
+- Uses proper data validation and error handling
+- Implements prepared statements for SQL queries to prevent SQL injection
+- Includes business logic for checking book availability
+- Automatic timestamp handling for borrow and return dates
+- Returns appropriate data structures for different operations
+
+## Model Role and Connections
+The RentedBook model is a critical component that implements the core business logic of the library system - the book lending process:
+
+### Input Connections
+- Receives database connection from Database class in config/database.php
+- Receives rental requests from:
+  - rent_book.php: For processing new book rentals
+  - profile.php: For handling book returns
+- Links to both User and Book models through foreign keys:
+  - user_id connects to the User model
+  - book_id connects to the Book model
+
+### Output Connections
+- Provides rental history data to profile.php for user dashboard
+- Returns availability status to rent_book.php for validation
+- Creates and updates rental records in the database
+- Indirectly affects book availability displayed throughout the application
+
+### Rental Process Flow
+1. User clicks to rent a book, triggering rent_book.php
+2. rent_book.php checks authentication via session.php
+3. rent_book.php verifies book existence via Book model
+4. rent_book.php calls RentedBook::isBookAvailable() to check availability
+5. If available, rent_book.php calls RentedBook::rentBook() to create rental record
+6. Success/error message is set in session and user is redirected
+
+### Return Process Flow
+1. User views rented books in profile.php
+2. User clicks to return a book
+3. profile.php calls RentedBook::returnBook() to update the rental record
+4. Book becomes available for other users to rent
+
+The RentedBook model represents the intersection between users and books, managing the core lending functionality that defines the purpose of the library system. It enforces business rules (like availability checking) and maintains the historical record of all lending transactions. This model creates the relationship between users and books, turning static catalog data into an interactive lending system. 

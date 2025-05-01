@@ -1,0 +1,220 @@
+html {
+    font-family: system-ui;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e293b, #475569, #64748b);
+    background-size: 300% 300%;
+    animation: gradient-animation 15s ease infinite;
+    position: relative;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    z-index: -1;
+}
+
+body .container {
+    padding: 32px;
+    border-radius: 16px;
+    max-width: 28rem;
+    width: 90%;
+    --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s, box-shadow 0.5s, opacity 0.5s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+body .container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+body .container p {
+    padding-left: 5px;
+    color: rgb(70, 70, 70);
+    text-align: center;
+    margin-top: 20px;
+}
+
+body .container p a {
+    text-decoration: none;
+    color: #0f172a;
+    font-weight: 600;
+    position: relative;
+    transition: color 0.3s;
+}
+
+body .container p a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #0f172a;
+    transition: width 0.3s ease;
+}
+
+body .container p a:hover {
+    color: #334155;
+}
+
+body .container p a:hover::after {
+    width: 100%;
+}
+
+body form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+body form.focused {
+    background-color: rgba(15, 23, 42, 0.03);
+    border-radius: 12px;
+}
+
+body h2 {
+    text-align: center;
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 24px;
+    color: #0f172a;
+    position: relative;
+}
+
+body h2::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 3px;
+    background-color: #0f172a;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+body form input {
+    outline: none;
+    border: 1px solid rgba(207, 207, 207, 0.8);
+    border-radius: 12px;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+body form input:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.2);
+    background-color: white;
+}
+
+body form input:hover {
+    transform: translateY(-2px);
+    border-color: rgb(180, 180, 180);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+#login {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: #0f172a;
+    cursor: pointer;
+    text-transform: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 16px;
+}
+
+#login:hover {
+    background-color: #334155;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(15, 23, 42, 0.3);
+}
+
+input.error {
+    border-color: #ef4444 !important;
+    background-color: #fee2e2 !important;
+}
+
+input.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+input:invalid {
+    border-color: #ef4444;
+}
+
+.alert {
+    background-color: #fee2e2;
+    color: #ef4444;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.error-message {
+    color: #ef4444;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.field-error {
+    color: #ef4444;
+    font-size: 12px;
+    display: block;
+    margin-top: -12px;
+    margin-bottom: 8px;
+    text-align: left;
+    padding-left: 4px;
+}
+
+.login-error {
+    margin-top: 8px;
+    text-align: center;
+}

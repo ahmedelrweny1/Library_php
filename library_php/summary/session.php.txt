@@ -1,0 +1,65 @@
+# session.php - Utility Summary
+
+## Overview
+The session.php file provides session management utilities that are used throughout the application to handle authentication state.
+
+## Key Functions
+- isLoggedIn(): Checks if a user is currently logged in
+- requireLogin(): Forces login for restricted pages
+- logout(): Ends the current user session
+
+## Implementation Details
+
+### isLoggedIn()
+- Returns true/false based on the existence of $_SESSION['user_id']
+- Simple helper to check authentication state across the application
+
+### requireLogin()
+- Used as a guard on pages that require authentication
+- Redirects unauthenticated users to login.php
+- Terminates script execution with exit() to prevent unauthorized access
+
+### logout()
+- Destroys the current session
+- Redirects to login.php
+- Terminates script execution with exit()
+
+## Usage in Application
+- Included in pages that need authentication checks
+- Used at the beginning of protected pages to enforce login
+- Provides consistent session management across the application
+- Makes authentication logic reusable and centralized
+
+## Utility Role and Connections
+The session.php utility serves as the authentication control layer across the entire application, providing consistent session management:
+
+### Input Connections
+- Relies on PHP's native session handling mechanism
+- Depends on session variables set during login process
+- Included in various pages that require authentication checks
+
+### Output Connections
+- Enforces authentication by redirecting to login.php when needed
+- Provides authentication status to all pages that include it
+- Controls access to protected functionality throughout the application
+
+### Authentication Flow Integration
+1. User attempts to access a protected page/functionality
+2. Page includes session.php
+3. Page calls requireLogin() at the beginning of execution
+4. session.php checks for presence of $_SESSION['user_id']
+5. If not logged in, redirects to login.php
+6. If logged in, allows page execution to continue
+
+### Application Security Architecture
+- **Protected Pages/Features**:
+  - profile.php: User profile and rental history
+  - rent_book.php: Book rental functionality
+  - Any page with user-specific content or actions
+  
+- **Authentication Points**:
+  - login.php: Establishes session and sets $_SESSION['user_id']
+  - logout.php: Destroys session
+  - session.php: Verifies session validity
+
+This utility forms the backbone of the application's security model, ensuring that protected resources are only accessible to authenticated users. By centralizing authentication logic in this file, the application maintains consistent security enforcement across all pages and avoids code duplication. The session.php utility connects the authentication process (login.php) with the protected resources throughout the application, creating a cohesive security layer. 

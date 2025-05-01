@@ -1,0 +1,107 @@
+# Library Management System - Architecture Overview
+
+## System Architecture
+
+The library management system follows a PHP-based MVC-like architecture with the following components:
+
+### Data Layer (Models)
+- **Book.php**: Manages book data and operations
+- **User.php**: Handles user authentication and account management
+- **RentedBook.php**: Manages the book lending process
+
+### Database Connection
+- **database.php**: Provides PDO database connectivity to all models
+
+### Utility Layer
+- **Validator.php**: Centralizes input validation
+- **session.php**: Manages authentication state
+
+### Presentation Layer (Views/Controllers)
+- **index.php**: Main landing page with book recommendations
+- **login.php**: User authentication
+- **register.php**: New user registration
+- **books.php**: Complete book listing and search
+- **profile.php**: User profile and rental management
+- **sidebar.php**: Navigation component included in multiple pages
+
+### API Endpoints
+- **get_book_details.php**: Returns book data in JSON format
+- **rent_book.php**: Processes book rental requests
+
+## Key Workflows
+
+### Authentication Flow
+1. User visits login.php or register.php
+2. Credentials are validated by Validator class
+3. User record is created/verified via User model
+4. Session is established with user identifier
+5. Protected pages check session via session.php utilities
+
+### Book Browsing Flow
+1. User visits index.php or books.php
+2. Book model retrieves books from database
+3. Pages display books in grid layouts
+4. User clicks on book to view details
+5. JavaScript calls get_book_details.php API
+6. Modal displays complete book information
+
+### Book Rental Flow
+1. User clicks "Rent" in book detail modal
+2. If not logged in, redirected to login.php
+3. If logged in, request sent to rent_book.php
+4. rent_book.php checks authentication and book availability
+5. If available, RentedBook model creates rental record
+6. User redirected to profile.php showing rental status
+
+## System Relationships
+
+### Database Relationships
+- **users**: Contains user accounts
+  - Referenced by rented_books.user_id
+- **books**: Contains book catalog
+  - Referenced by rented_books.book_id
+- **rented_books**: Junction table linking users to books
+  - Contains rental status (borrowed/returned)
+
+### Component Dependencies
+- All models depend on database.php
+- Authentication system:
+  - login.php → User model → database
+  - register.php → User model → database
+  - All protected pages → session.php → login.php
+- Book browsing:
+  - index.php/books.php → Book model → database
+  - get_book_details.php → Book model → database
+- Book rental:
+  - rent_book.php → RentedBook model → database
+  - rent_book.php → Book model → database
+  - rent_book.php → session.php
+
+## Security Architecture
+
+The system implements multiple layers of security:
+
+1. **Input Validation**: Validator class validates all user input
+2. **Authentication**: session.php enforces login requirements
+3. **Password Security**: User model implements password hashing
+4. **SQL Injection Protection**: PDO prepared statements throughout all models
+5. **XSS Prevention**: htmlspecialchars used for all output
+
+## Client-Server Interaction
+
+- Server-rendered PHP pages for main navigation
+- AJAX/JavaScript for dynamic content loading:
+  - Book detail modal uses get_book_details.php
+  - Search functionality uses client-side filtering
+- Session-based state management across requests
+- Form submissions for authentication and book rental
+
+## Design Patterns
+
+- **MVC-like Separation**: Models for data, PHP pages for view/control
+- **Data Access Objects**: Models encapsulate database operations
+- **Front Controller Concept**: Common includes for consistent page structure
+- **Repository Pattern**: Models provide centralized data access
+- **Service Layer**: Utilities provide cross-cutting concerns
+
+This architecture provides a clean separation of concerns while maintaining the simplicity of a traditional PHP application. The consistent patterns across components make the system maintainable and extensible for future enhancements. 

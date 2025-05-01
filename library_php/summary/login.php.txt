@@ -1,0 +1,67 @@
+# login.php - Page Summary
+
+## Overview
+The login.php file implements the user login functionality, handling authentication and session management.
+
+## Key Dependencies
+- models/User.php: User model for authentication
+- includes/Validator.php: Validation class for form input
+
+## Session Management
+- Starts a session at the beginning of the script
+- Sets user session variables upon successful login
+
+## Authentication Flow
+1. Checks if form was submitted (POST request)
+2. Retrieves email and password from form data
+3. Validates input using the Validator class
+4. If validation passes, attempts to authenticate using User::login()
+5. On successful login:
+   - Sets session variables (user_id, username)
+   - Redirects to the homepage (index.php)
+6. On failed login:
+   - Displays error message "Invalid email or password!"
+
+## Form Handling
+- Preserves submitted email value on failed login attempts
+- Marks input fields with an "error" class when validation fails
+- Shows specific error messages below each input field
+
+## Frontend Integration
+- Includes HTML form with email and password fields
+- Links to registration page for new users
+- Includes login.js script for client-side functionality
+- Uses CSS for styling (login.css)
+
+## Security Considerations
+- Uses server-side validation to prevent malicious input
+- Implements proper session management
+- Uses htmlspecialchars for output escaping to prevent XSS attacks
+
+## Page Role and Connections
+This page serves as the authentication gateway to the library system with the following connections:
+
+### Input Connections
+- Accepts user input through the login form
+- May receive redirects from pages requiring authentication (via session.php's requireLogin function)
+- Uses the User model to verify credentials against the database
+- Uses Validator class to validate input data
+
+### Output Connections
+- On successful login, redirects to index.php with an authenticated session
+- Provides a link to register.php for new users
+- Uses session variables that will be checked by all protected pages
+
+### Logic Flow
+1. User arrives at login page (either directly or redirected from a protected page)
+2. User enters email and password
+3. System validates input format using Validator class
+4. System attempts authentication using User::login() against database
+5. If successful:
+   - Session is established with user identification
+   - User is redirected to index.php with full access
+6. If failed:
+   - Error messages are displayed
+   - User remains on login page to retry
+
+The login.php acts as the security control point for the entire application, establishing the authenticated session that will be used throughout the system to determine user access rights and personalize content. It directly connects to the User model for authentication and indirectly connects to all protected pages through the shared session state. 

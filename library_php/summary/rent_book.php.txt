@@ -1,0 +1,82 @@
+# rent_book.php - Controller Summary
+
+## Overview
+The rent_book.php file handles the process of renting a book, including authentication checks, book availability verification, and recording the rental transaction.
+
+## Key Dependencies
+- models/RentedBook.php: Model for managing book rentals
+- models/Book.php: Model for book operations
+- includes/session.php: Session management utilities
+
+## Authentication Check
+- Uses requireLogin() function from session.php to ensure the user is logged in
+- Redirects unauthenticated users to login page
+
+## Processing Flow
+1. Gets book ID from URL parameter and validates it
+2. If book ID is invalid (≤ 0):
+   - Sets error message in session
+   - Redirects to index.php
+3. Verifies book exists using Book::getBookDetails()
+4. If book doesn't exist:
+   - Sets error message in session
+   - Redirects to index.php
+5. Creates RentedBook object with:
+   - user_id from session
+   - book_id from parameter
+6. Checks if book is available using RentedBook::isBookAvailable()
+7. If book is already rented:
+   - Sets appropriate message in session
+   - Redirects to books.php
+8. Attempts to record rental using RentedBook::rentBook()
+9. If successful:
+   - Sets success message in session
+   - Redirects to profile.php
+10. If failed:
+    - Sets error message in session
+    - Redirects to index.php
+
+## Session Messages
+- Uses $_SESSION['message'] to communicate results to the user
+- Messages are displayed on the target page after redirect
+
+## Security Considerations
+- Validates and sanitizes input parameters
+- Enforces authentication with requireLogin()
+- Uses model methods for business logic validation (availability check)
+- Prevents direct script access through redirects
+
+## Controller Role and Connections
+The rent_book.php controller serves as the action processor for the book rental feature, connecting the user interface with the data models:
+
+### Input Connections
+- Receives book ID from URL parameters (typically from book links or modal actions)
+- Gets user identification from session variables (set during login)
+- Uses session.php for authentication verification
+- Uses Book model to verify book existence
+- Uses RentedBook model to check availability and record rental
+
+### Output Connections
+- Redirects to profile.php on successful rental (with success message)
+- Redirects to books.php if book is unavailable (with status message)
+- Redirects to index.php on error or invalid input (with error message)
+- Creates rental records in the database through the RentedBook model
+
+### Integration Points
+- JavaScript: Book details modal on index.php and books.php pages contains "Rent" buttons that link to this controller
+- Session: Uses session variables for authentication and message passing
+- Database: Creates records in the rented_books table via the RentedBook model
+
+### Complete Rental Flow
+1. User browses books on index.php or books.php
+2. User clicks on a book to view details in modal
+3. User clicks "Rent This Book" button in modal
+4. If not logged in, user is prompted to login
+5. If logged in, request is sent to rent_book.php with book ID
+6. rent_book.php verifies authentication via session.php
+7. rent_book.php verifies book existence and availability
+8. rent_book.php creates rental record via RentedBook model
+9. User is redirected to profile.php showing their rented books
+10. Success message is displayed to confirm the rental
+
+This controller implements one of the core business processes of the library system, bringing together the authentication system, book catalog, and rental functionality into a cohesive workflow that lets users borrow books from the library. 

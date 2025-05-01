@@ -1,0 +1,67 @@
+# Book.php - Model Summary
+
+## Overview
+The Book.php file implements the Book class, which handles all database operations related to books in the library system.
+
+## Database Connection
+- Connects to the MySQL database using the Database class from config/database.php
+- Uses PDO for secure database operations
+- Table name: "books"
+
+## Properties
+- id: Book identifier
+- title: Book title
+- author: Book author
+- description: Book description
+- isbn: International Standard Book Number
+- published_year: Year of publication
+- image_url: Path to book cover image
+- created_at: Timestamp when book was added to database
+
+## Methods
+- __construct(): Initializes database connection
+- getRandomBooks($limit = 4): Returns random books for recommendations (used on homepage)
+- getLatestBooks($limit = 4): Returns latest books added to the system
+- getBookDetails($id): Returns detailed information about a specific book
+- searchBooks($keyword): Searches books by title, author, or description
+- create(): Adds a new book to the database
+- read($id = null): Retrieves all books or a specific book by ID
+- update(): Updates book information in the database
+- delete($id): Removes a book from the database
+
+## Implementation Details
+- Uses prepared statements for SQL queries to prevent SQL injection
+- Implements proper validation and error handling
+- Returns appropriate data structures (PDOStatement or associative arrays) for different operations
+- Supports CRUD operations (Create, Read, Update, Delete) for book management
+
+## Model Role and Connections
+The Book model is a core component of the library system that manages all book-related data operations, serving as the data layer between the database and the application:
+
+### Input Connections
+- Receives database connection from Database class in config/database.php
+- Receives parameters from various pages that need book data:
+  - index.php: Requests random and latest books for display
+  - books.php: Requests complete book listings and search results
+  - get_book_details.php: Requests detailed information about specific books
+  - rent_book.php: Requests book verification before rental
+
+### Output Connections
+- Provides book data to multiple pages:
+  - index.php: For displaying featured, recommended and latest books
+  - books.php: For displaying the complete catalog and search results
+  - get_book_details.php: For the JSON API response with book details
+  - rent_book.php: For confirming book existence and showing book information
+- Interacts with the RentedBook model through shared book IDs in the rental process
+
+### Data Flow
+1. Database class provides connection to the MySQL database
+2. Book model establishes connection in constructor
+3. Controller/Page files request book data by calling specific methods
+4. Book model executes SQL queries using prepared statements
+5. Book model returns data to the calling page:
+   - As PDOStatement objects for loops displaying multiple books
+   - As associative arrays for single book details
+   - As boolean values for operations like create/update/delete
+
+The Book model is central to the application's functionality, providing all book-related data that drives the main features of browsing, searching, and renting books. It connects the database layer to the presentation layer, ensuring proper data handling and security throughout the application. 

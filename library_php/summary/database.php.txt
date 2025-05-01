@@ -1,0 +1,56 @@
+# database.php - Configuration Summary
+
+## Overview
+The database.php file implements the Database class, which handles the database connection for the entire application.
+
+## Database Configuration
+- Host: localhost
+- Database Name: library_php
+- Username: root
+- Password: 21062005 (hardcoded)
+
+## Implementation
+- Uses PDO (PHP Data Objects) for database access
+- Creates a singleton-like pattern for database connection
+
+## Key Method
+- getConnection(): Creates and returns a PDO connection object with proper settings
+
+## PDO Configuration
+- Sets error mode to PDO::ERRMODE_EXCEPTION for proper error handling
+- Sets default fetch mode to PDO::FETCH_ASSOC for associative array results
+- Enables proper exception handling for database errors
+
+## Error Handling
+- Catches PDOException and outputs error message
+- Returns null on connection failure
+
+## Usage Pattern
+- All model classes (Book, User, RentedBook) include this file
+- Models create an instance of Database in their constructors
+- The connection is established once per model instance
+
+## Component Role and Connections
+The database.php configuration file serves as the foundation of the application's data layer, establishing and configuring all database connections:
+
+### Input Connections
+- None direct - it's imported by other components
+- Database credentials are hardcoded in the file (not ideal for security)
+
+### Output Connections
+- Provides PDO connection objects to all model classes:
+  - Book.php: For book data operations
+  - User.php: For user authentication and management
+  - RentedBook.php: For book lending operations
+
+### Connection Flow
+1. Model class includes the database.php file
+2. Model instantiates Database class in its constructor
+3. Model calls getConnection() to obtain a PDO object
+4. Model uses the PDO object for database operations
+5. If connection fails, error is displayed and null is returned
+
+This component is at the base of the application's architecture, forming the critical link between the PHP application and the MySQL database. All data operations in the system depend on this connection, making it essential to the functioning of every feature. The consistent use of PDO with prepared statements throughout the models, built on this connection, ensures a secure approach to database interaction that protects against SQL injection attacks.
+
+### Security Note
+The hardcoded database credentials present a security concern in a production environment. In a more secure implementation, these credentials should be stored in environment variables or a separate configuration file outside the web root. 

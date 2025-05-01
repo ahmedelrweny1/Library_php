@@ -1,0 +1,72 @@
+# Validator.php - Utility Summary
+
+## Overview
+The Validator.php file implements the Validator class, which provides form validation functionality throughout the application.
+
+## Key Validation Methods
+- validateEmail($email): Validates email format and ensures it's not empty
+- validatePassword($password, $minLength = 6): Validates password length and ensures it's not empty
+- validateLogin($email, $password): Combines email and password validation for login forms
+- validateRegistration($username, $email, $password, $confirmPassword): Comprehensive validation for user registration
+
+## Validation Rules
+- Email:
+  - Must not be empty
+  - Must be a valid email format (using filter_var with FILTER_VALIDATE_EMAIL)
+  
+- Password:
+  - Must not be empty
+  - Must be at least 6 characters long by default (configurable)
+  
+- Username (in registration):
+  - Must not be empty
+  - Must be at least 3 characters long
+  
+- Password Confirmation (in registration):
+  - Must match the password field
+
+## Error Handling
+- Returns specific error messages for each validation failure
+- For single-field validations: returns error message string or null
+- For multi-field validations: returns associative array of field names to error messages
+
+## Usage in Application
+- Used in login.php for validating login credentials
+- Designed to be used in register.php for validating registration data (though not fully implemented)
+- Provides a centralized validation system for consistency across the application
+
+## Utility Role and Connections
+The Validator class serves as the input validation layer for the application, ensuring data quality and security across all user interactions:
+
+### Input Connections
+- Receives form data from various pages for validation:
+  - login.php: For validating login credentials
+  - register.php: For validating new user information (partially implemented)
+  - Potentially other form-handling pages
+
+### Output Connections
+- Returns validation results to calling pages:
+  - Specific error messages for display to users
+  - Simple true/false validation results for flow control
+- Indirectly protects the database from invalid or malicious input
+
+### Validation Flow Integration
+1. User submits a form (login, registration, etc.)
+2. Controller page receives form data via POST
+3. Controller creates Validator instance
+4. Controller calls appropriate validation method(s)
+5. Validator returns validation results
+6. Controller uses results to:
+   - Proceed with processing if validation passed
+   - Display error messages if validation failed
+
+### Security Architecture Contribution
+- Forms first line of defense against invalid input
+- Prevents common issues:
+  - Empty required fields
+  - Malformed email addresses
+  - Insecure passwords (too short)
+  - Mismatched password confirmations
+- Works alongside database-level validation (e.g., unique email checking)
+
+This utility ensures data integrity throughout the application by validating user input before it reaches the data layer. By centralizing validation logic, it promotes consistency in how user input is processed across different forms. While it currently appears to be fully utilized in login.php but only partially in register.php, its architecture allows for expansion to validate any form data throughout the application. The Validator class represents a key component in the application's overall security strategy, complementing the session management and database access layers. 

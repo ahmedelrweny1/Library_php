@@ -1,0 +1,77 @@
+# index.php - Main Page Summary
+
+## Overview
+The index.php file serves as the homepage of the library system, displaying recommended books, latest books, and a featured book modal.
+
+## Setup and Configuration
+- Enables error reporting and display for debugging
+- Starts a PHP session for user authentication state
+- Defines SITE_LOADED constant as security measure
+- Includes Book.php model for book operations
+
+## Data Initialization
+- Creates Book object for database operations
+- Fetches 4 random books as recommendations
+- Fetches 4 latest books based on creation date
+- Fetches 1 random book as featured book
+- Determines user login state from session
+
+## Page Structure
+- HTML5 document with responsive design
+- Includes sidebar.php for navigation
+- Main content section with search functionality
+- User actions section that changes based on login state
+- Book sections displaying book data from database queries
+- Modal dialog for detailed book view
+
+## Dynamic Content
+- Conditionally displays login/register buttons or profile icon based on authentication state
+- Outputs book data in loops using PDO fetch operations
+- Sanitizes output with htmlspecialchars to prevent XSS attacks
+- Features a book details modal pre-populated with featured book data
+- Conditionally shows login requirement for rental feature
+
+## JavaScript Integration
+- Includes Font Awesome for icons
+- Includes script.js for core functionality
+- Includes index.js for homepage specific behavior
+- Includes responsive.js for mobile responsiveness
+
+## Authentication Flow
+- Checks $_SESSION['user_id'] to determine if user is logged in
+- Shows different UI elements based on authentication state
+- Restricts rental functionality to authenticated users
+
+## CSS Dependencies
+- main.css: Core styles
+- sidebar.css: Navigation styles
+- index.css: Homepage specific styles
+
+## Page Role and Connections
+This page serves as the central hub of the library application with the following connections:
+
+### Input Connections
+- Receives user session state from login.php and register.php
+- Loads book data from the Book model, which connects to the database
+- Includes sidebar.php for navigation elements
+
+### Output Connections
+- Links to login.php and register.php for unauthenticated users
+- Links to profile.php for authenticated users
+- Links to books.php for browsing the complete book collection
+- Connects to get_book_details.php via JavaScript for loading book details in the modal
+- Book entries connect to rent_book.php for the rental process (for authenticated users)
+
+### Logic Flow
+1. User arrives at homepage
+2. System checks authentication state:
+   - If logged in: Shows profile icon and enables rental functionality
+   - If not logged in: Shows login/register buttons and disables rental
+3. User can:
+   - Browse recommended and latest books
+   - Click on a book to view details in a modal
+   - Search for books (handled by JavaScript)
+   - Navigate to other sections using the sidebar
+   - Rent a book (if authenticated) or be prompted to login (if not)
+
+The index.php acts as a gateway to all other functionality in the application, providing both visual navigation and logical connections to other components. 

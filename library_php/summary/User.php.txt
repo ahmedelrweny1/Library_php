@@ -1,0 +1,65 @@
+# User.php - Model Summary
+
+## Overview
+The User.php file implements the User class, which handles all user-related operations including authentication, registration, and user management.
+
+## Database Connection
+- Connects to the MySQL database using the Database class from config/database.php
+- Uses PDO for secure database operations
+- Table name: "users"
+
+## Properties
+- id: User identifier
+- username: User's display name
+- email: User's email address (used for login)
+- password: Hashed password
+- created_at: Timestamp when user registered
+
+## Methods
+- __construct(): Initializes database connection
+- getUserById($id): Retrieves user information by ID (excludes password)
+- create(): Registers a new user in the system
+- login($email, $password): Authenticates a user based on email and password
+- emailExists($email): Checks if an email is already registered in the system
+
+## Implementation Details
+- Uses password_hash() and password_verify() for secure password handling
+- Implements proper validation through the Validator class
+- Uses prepared statements for SQL queries to prevent SQL injection
+- Returns user data as associative arrays
+- Excludes sensitive information (like passwords) from query results when not needed
+
+## Model Role and Connections
+The User model is a fundamental component of the library system that manages user authentication, registration, and profile data:
+
+### Input Connections
+- Receives database connection from Database class in config/database.php
+- Receives user data from:
+  - register.php: For creating new user accounts
+  - login.php: For authenticating users
+  - profile.php: For displaying and updating user information
+
+### Output Connections
+- Provides authentication results to login.php
+- Supplies user data to multiple pages:
+  - profile.php: For displaying user profile information
+  - Any page with personalized elements based on user identity
+- Creates session variables through login.php that are used throughout the application
+- Connects to the RentedBook model via user_id in rental transactions
+
+### Authentication Flow
+1. User enters credentials in login.php
+2. login.php passes credentials to User::login()
+3. User model verifies credentials against database records
+4. If successful, user data is returned to login.php
+5. login.php establishes session with user identification
+6. Session variables are used by other pages to identify the user
+
+### Registration Flow
+1. User enters registration data in register.php
+2. register.php uses User::emailExists() to check for duplicates
+3. If email is unique, User::create() is called to create the account
+4. New user record is added to the database with a securely hashed password
+5. User is redirected to login.php to authenticate with new credentials
+
+The User model serves as the security foundation of the application, providing the authentication layer that protects sensitive operations and enables personalized experiences. It works closely with session management to maintain authenticated state across page requests and connects to other models like RentedBook for user-specific operations. 
